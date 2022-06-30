@@ -55,11 +55,12 @@ module.exports = (server) => {
           username: socket.data.username,
         });
         // find entry in database
-        const entry = await historyModel.findOne(entryId[0]);
+        const list = await historyModel.findByRoom(data.room);
         // send to everyone in the room
         io.to(data.room).emit("action", {
-          action: "message",
-          ...entry,
+          action: "history",
+          room: data.room,
+          list: list,
         });
       } else {
         // send an error message
@@ -88,6 +89,13 @@ module.exports = (server) => {
             });
             console.log("room already exists");
           }
+          // Find all rooms and send to all users
+          roomModel
+            .find()
+            .then((rooms) => io.emit("action", { action: "roomList", rooms }));
+          break;
+        // list all room
+        case "list":
           // Find all rooms and send to all users
           roomModel
             .find()
@@ -126,7 +134,11 @@ module.exports = (server) => {
             });
             // send history of chat messages in room
             const historyForRoom = await historyModel.findByRoom(data.room);
-            socket.emit("action", { action: "history", list: historyForRoom });
+            socket.emit("action", {
+              action: "history",
+              list: historyForRoom,
+              room: data.room,
+            });
           }
           break;
         default:
