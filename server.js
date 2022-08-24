@@ -6,7 +6,7 @@ const cors = require("cors");
 // socket code
 const socket = require("./socket");
 
-const port = 4000;
+const port = process.env.PORT || 4000;
 
 // setup express
 const app = express();
