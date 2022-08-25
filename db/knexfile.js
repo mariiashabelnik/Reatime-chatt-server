@@ -1,5 +1,3 @@
-const path = require("path");
-
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
  */
