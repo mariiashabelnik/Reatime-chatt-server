@@ -1,3 +1,5 @@
+/* eslint-disable no-case-declarations*/
+
 const { Server } = require("socket.io");
 
 // Our models
@@ -49,7 +51,7 @@ module.exports = (server) => {
 
       if (data.msg.trim() !== "") {
         // add message to history
-        const entryId = await historyModel.insert({
+        await historyModel.insert({
           message: data.msg,
           room: data.room,
           username: socket.data.username,
@@ -80,7 +82,7 @@ module.exports = (server) => {
         case "create":
           try {
             // insert into our database
-            const resp = await roomModel.insert({ room: data.room });
+            await roomModel.insert({ room: data.room });
           } catch (err) {
             // send an error message
             socket.emit("action", {
